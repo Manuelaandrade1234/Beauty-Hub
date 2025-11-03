@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadastro Cliente | Beauty Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --purple-600:#8B5CF6;
+  --purple-700:#6B21A8;
+  --muted:#6b5671;
+}
+
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Inter',sans-serif; }
+
+body {
+  min-height:100vh;
+  background: linear-gradient(135deg,#f2e3ff,#f9f7fc);
+  display:flex;
+  flex-direction:column;
+}
+
+main {
+  width:90%; max-width:900px;
+  background:rgba(255,255,255,0.95);
+  border-radius:10px;
+  box-shadow:0 20px 40px rgba(80,30,120,0.25);
+  margin:100px auto 80px; /* espaço para topbar e footer */
+  padding:40px;
+  position:relative;
+  z-index:2;
+}
+
+/* Topbar */
+.topbar {
+  background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;border-bottom:1px solid rgba(0,0,0,.04);
+  position:fixed;top:0;left:0;width:100%;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.brand{font-weight:700;color:var(--purple-700);display:flex;align-items:center;gap:8px;font-size:20px;}
+.user-avatar { width:40px;height:40px;border-radius:50%; background:url('img/logo.jpg') center/cover; border:2px solid #C4B5FD; }
+
+/* Formulário */
+h1{ font-size:28px; color:var(--purple-700); margin-bottom:10px; text-align:center; }
+.subtitle{ font-size:15px; color:var(--purple-700); margin-bottom:28px; text-align:center; }
+form{ display:flex; flex-direction:column; gap:18px; }
+label{ text-align:left; font-weight:600; color:var(--purple-700); }
+.input-group{ position:relative; }
+.input-group i{ position:absolute; top:50%; left:12px; transform:translateY(-50%); color:var(--purple-700); }
+input{ width:100%; padding:12px 14px 12px 38px; border-radius:10px; border:1px solid #C89BF5; font-size:15px; outline:none; transition:0.3s; }
+input:focus{ border-color:#A15BD6; box-shadow:0 0 8px rgba(161,91,214,0.4); }
+
+.btn{
+  padding:12px; border:none; border-radius:10px; font-weight:600; font-size:16px;
+  color:#fff; background:linear-gradient(135deg,rgb(169, 86, 247),#6B21A8); cursor:pointer; transition:0.3s;
+}
+.btn:hover{ background:#8C44C7; transform:translateY(-2px); box-shadow:0 8px 18px rgba(75,0,130,0.3); }
+
+#create-msg{ font-weight:600; margin-top:10px; min-height:20px; text-align:center; }
+
+.create-account{ display:inline-block; width:100%; padding:12px 0; border-radius:10px;
+  background:linear-gradient(135deg,rgb(169, 86, 247),#6B21A8); color:#fff; font-weight:600; text-decoration:none; text-align:center; transition:0.3s;
+}
+.create-account:hover{ background:#8C44C7; transform:translateY(-2px); }
+
+/* Footer */
+footer{padding:26px;text-align:center;color:#6B21A8}
+
+
+/* Back button */
+.back-button {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; background:var(--purple-700); color:#fff; border-radius:20%;
+  text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:0.2s; margin-bottom:20px;
+}
+.back-button i { font-size:16px; }
+.back-button:hover { transform: translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,0.2); }
+
+/* Responsivo */
+@media(max-width:750px){
+  main{margin:120px 20px 80px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><i class="fa-solid fa-sparkles"></i> Beauty Hub</div>
+  <div class="topbar-right">
+    <div class="user-avatar"></div>
+  </div>
+</div>
+
+<main>
+  <a href="login_cliente.html" class="back-button">
+    <i class="fa-solid fa-arrow-left"></i>
+  </a>
+  <h1>Cadastro de Cliente</h1>
+  <p class="subtitle">Crie sua conta para agendar serviços e acompanhar sua beleza.</p>
+
+  <form onsubmit="return cadastrarCliente(event)">
+    <div class="input-group">
+      <i class="fa-solid fa-user"></i>
+      <input id="cadNome" type="text" placeholder="Digite seu nome" required>
+    </div>
+
+    <div class="input-group">
+      <i class="fa-solid fa-envelope"></i>
+      <input id="cadEmail" type="email" placeholder="Digite seu email" required>
+    </div>
+
+    <div class="input-group">
+      <i class="fa-solid fa-phone"></i>
+      <input id="cadTelefone" type="tel" placeholder="Digite seu telefone (opcional)">
+    </div>
+
+    <div class="input-group">
+      <i class="fa-solid fa-lock"></i>
+      <input id="cadSenha" type="password" placeholder="Crie uma senha" required>
+    </div>
+
+    <button class="btn" type="submit">Criar Conta</button>
+    <p id="msgCliente"></p>
+  </form>
+
+  <p class="create-msg">Já possui conta?</p>
+  <a href="login_cliente.html" class="create-account">Faça login</a>
+</main>
+
+  <footer>© 2025 Beauty Hub - Todos os direitos reservados.</footer>
+
+<script>
+function cadastrarCliente(event){
+  event.preventDefault();
+  const nome=document.getElementById('cadNome').value.trim();
+  const email=document.getElementById('cadEmail').value.trim().toLowerCase();
+  const telefone=document.getElementById('cadTelefone').value.trim();
+  const senha=document.getElementById('cadSenha').value;
+  const msg=document.getElementById('msgCliente');
+
+  let users=JSON.parse(localStorage.getItem('tb_users')||'[]');
+  if(users.find(u=>u.email===email)){
+    msg.style.color='red';
+    msg.textContent='Email já cadastrado 😕';
+    return;
+  }
+
+  users.push({nome,email,telefone,senha,role:'client'});
+  localStorage.setItem('tb_users',JSON.stringify(users));
+  msg.style.color='green';
+  msg.textContent='Cadastro realizado! Redirecionando...';
+  setTimeout(()=>window.location.href='login_cliente.html',1000);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Perfil | Beauty Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --purple-600:#8B5CF6;
+  --purple-700:#6B21A8;
+}
+
+* { box-sizing:border-box; font-family:'Inter', sans-serif; margin:0; padding:0; }
+body { background: linear-gradient(135deg,#E8D6FF,#F3E9FF 60%); color:#2b2140; min-height:100vh; }
+
+/* Sidebar */
+.sidebar {
+  width:260px;
+  background: linear-gradient(180deg,rgba(155,98,214,0.95),rgba(139,92,246,0.95));
+  color:white;
+  position:fixed;
+  height:100%;
+  left:0;
+  top:0;
+  padding:25px 20px;
+  transition:all 0.4s ease;
+  box-shadow:6px 0 25px rgba(0,0,0,0.15);
+  z-index:100;
+}
+.sidebar.closed{width:80px;padding:25px 10px;}
+.sidebar h2{font-size:22px;text-align:center;font-weight:700;margin-bottom:40px;transition:opacity 0.3s ease;}
+.sidebar.closed h2{opacity:0;pointer-events:none;}
+.sidebar ul{list-style:none;}
+.sidebar ul li{margin:18px 0;}
+.sidebar ul li a{
+  color:white;text-decoration:none;display:flex;align-items:center;gap:14px;padding:12px 15px;
+  border-radius:12px;transition:0.3s;font-weight:500;background:transparent;
+}
+.sidebar ul li a:hover,.sidebar ul li a.active{
+  background:rgba(255,255,255,0.25);
+  box-shadow:0 0 12px rgba(255,255,255,0.3);
+  transform:translateX(5px);
+}
+.sidebar ul li i{font-size:18px;transition:transform 0.3s;}
+.sidebar.closed ul li span{display:none;}
+.toggle-btn{
+  position:absolute;right:-18px;top:20px;width:38px;height:38px;
+  border-radius:50%;background:#fff;color:var(--purple-600);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);cursor:pointer;z-index:140;
+}
+
+/* Main */
+.main{margin-left:260px;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .35s ease;}
+.sidebar.closed + .main{margin-left:90px;}
+
+/* Topbar */
+.topbar {
+  background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;border-bottom:1px solid rgba(0,0,0,.04);
+  position:sticky;top:0;z-index:80;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.brand{font-weight:700;color:var(--purple-700);display:flex;align-items:center;gap:8px;font-size:20px;}
+.topbar-right{display:flex;align-items:center;gap:18px;}
+.icon-btn{background:transparent;border:0;cursor:pointer;font-size:18px;color:var(--purple-700);}
+.user-avatar {
+  width:40px;height:40px;border-radius:50%;
+  background:url('img/logo.jpg') center/cover;
+  border:2px solid #C4B5FD;
+}
+
+/* Profile card */
+main { flex:1; padding:40px 28px 80px; display:flex; justify-content:center; }
+.profile-card {
+  background:#fff;
+  border-radius:20px;
+  border:2px solid #B497BD;
+  box-shadow:0 12px 28px rgba(75,45,85,0.15);
+  width:100%;
+  max-width:500px;
+  padding:30px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+h1 { font-size:32px; color:#3b2e4a; text-align:center; }
+p.lead { font-size:16px; color:#5a4a60; text-align:center; }
+.inspirational-card {
+  background: linear-gradient(135deg, #EDE0F8, #c594ec);
+  padding:12px 15px;
+  border-radius:15px;
+  text-align:center;
+  font-style:italic;
+  color:#5a4a60;
+  font-size:14px;
+}
+
+/* Info Groups */
+.info-group { display:flex; flex-direction:column; gap:5px; }
+.info-group label { font-weight:600; color:#3b2e4a; font-size:14px; }
+.info-group input {
+  width:100%;
+  padding:12px 15px;
+  border-radius:12px;
+  border:1px solid #B497BD;
+  font-size:16px;
+  transition:0.3s;
+}
+.info-group input:focus { border-color:#8B5FBF; outline:none; box-shadow:0 0 8px rgba(139,95,191,0.3); }
+
+/* Buttons */
+.edit-save-btns { display:flex; justify-content: space-between; margin-top:10px; gap:10px; }
+.editBtn, .saveBtn {
+  flex:1;
+  padding:10px 0;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+.editBtn { background:#9A5FD9; color:#fff; }
+.editBtn:hover { background:#8B5FBF; }
+.saveBtn { background:linear-gradient(135deg,#B497BD,#8B5FBF); color:#fff; }
+.saveBtn:hover { background:linear-gradient(135deg,#8B5FBF,#B497BD); }
+
+/* Footer */
+footer {
+  padding:26px;
+  text-align:center;
+  color:var(--purple-700);
+  border-top:1px  rgba(0,0,0,0.05);
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="toggle-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+  <h2>Beauty Hub</h2>
+  <ul>
+    <li><a href="cliente_home.html"><i class="fa-solid fa-house"></i><span> Início</span></a></li>
+    <li><a href="agendar.html"><i class="fa-solid fa-clock"></i><span> Agende Seu Horarios</span></a></li>
+    <li><a href="meus_agendamentos.html"><i class="fa-solid fa-calendar-days"></i><span> Meus Agendamentos</span></a></li>
+    <li><a href="perfil.html" class="active"><i class="fa-solid fa-user"></i><span> Perfil</span></a></li>
+    <li><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i><span> Sair</span></a></li>
+  </ul>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="brand"><i class="fa-solid fa-sparkles"></i> Beauty Hub</div>
+    <div class="topbar-right">
+      <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+      <button class="icon-btn"><i class="fa-regular fa-envelope"></i></button>
+      <div class="user-avatar"></div>
+    </div>
+  </div>
+
+  <main>
+    <div class="profile-card">
+      <h1>Meu Perfil</h1>
+      <p class="lead">Confira seus dados e mantenha tudo atualizado</p>
+
+      <div class="inspirational-card">
+        "A verdadeira beleza vem da confiança e do cuidado que dedicamos a nós mesmos. 🌸"
+      </div>
+
+      <div class="info-group">
+        <label>🧑 Nome:</label>
+        <input type="text" id="profileName" disabled>
+      </div>
+      <div class="info-group">
+        <label>📧 Email:</label>
+        <input type="email" id="profileEmail" disabled>
+      </div>
+      <div class="info-group">
+        <label>📞 Telefone:</label>
+        <input type="text" id="profilePhone" disabled>
+      </div>
+      <div class="info-group">
+        <label>🏠 Endereço (opcional):</label>
+        <input type="text" id="profileAddress" disabled>
+      </div>
+      <div class="info-group">
+        <label>🎂 Data de Nascimento (opcional):</label>
+        <input type="date" id="profileBirth" disabled>
+      </div>
+
+      <div class="edit-save-btns">
+        <button class="editBtn" id="editBtn">Editar</button>
+        <button class="saveBtn" id="saveBtn" style="display:none;">Salvar</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2025 Beauty Hub - Todos os direitos reservados.</footer>
+</div>
+
+<script>
+function toggleMenu(){
+  document.querySelector('.sidebar').classList.toggle('closed');
+}
+
+const profileName = document.getElementById('profileName');
+const profileEmail = document.getElementById('profileEmail');
+const profilePhone = document.getElementById('profilePhone');
+const profileAddress = document.getElementById('profileAddress');
+const profileBirth = document.getElementById('profileBirth');
+const editBtn = document.getElementById('editBtn');
+const saveBtn = document.getElementById('saveBtn');
+
+function loadProfile() {
+  const profile = JSON.parse(localStorage.getItem('user_profile')) || {};
+  profileName.value = profile.name || '';
+  profileEmail.value = profile.email || '';
+  profilePhone.value = profile.phone || '';
+  profileAddress.value = profile.address || '';
+  profileBirth.value = profile.birth || '';
+}
+loadProfile();
+
+editBtn.addEventListener('click', () => {
+  profileName.disabled = false;
+  profileEmail.disabled = false;
+  profilePhone.disabled = false;
+  profileAddress.disabled = false;
+  profileBirth.disabled = false;
+  saveBtn.style.display = 'inline-block';
+  editBtn.style.display = 'none';
+});
+
+saveBtn.addEventListener('click', () => {
+  const profile = {
+    name: profileName.value,
+    email: profileEmail.value,
+    phone: profilePhone.value,
+    address: profileAddress.value,
+    birth: profileBirth.value
+  };
+  localStorage.setItem('user_profile', JSON.stringify(profile));
+  profileName.disabled = true;
+  profileEmail.disabled = true;
+  profilePhone.disabled = true;
+  profileAddress.disabled = true;
+  profileBirth.disabled = true;
+  saveBtn.style.display = 'none';
+  editBtn.style.display = 'inline-block';
+  alert('Perfil atualizado com sucesso!');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agende o Horario do Seu Cliente | Beauty Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --purple-600:#8B5CF6; --purple-700:#6B21A8; --accent:#A36AD9;
+  --card-shadow:0 10px 30px rgba(139,92,246,0.12);
+  --glass:rgba(255,255,255,0.95);
+  --ok:#2fa84f;
+  --danger:#e05b5b;
+  --neutral:#6b5671;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+body {
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background: linear-gradient(135deg,#E8D6FF,#F3E9FF);
+  min-height:100vh;
+}
+.sidebar{
+  width:260px;
+  background: linear-gradient(180deg, rgba(155,98,214,0.95), rgba(139,92,246,0.95));
+  backdrop-filter: blur(8px); color:white;
+  position: fixed; height:100%; left:0; top:0; padding:25px 20px;
+  transition: all 0.4s ease; box-shadow:6px 0 25px rgba(0,0,0,0.15); z-index:100;
+}
+.sidebar.closed{width:80px;padding:25px 10px;}
+.sidebar h2{font-size:22px;text-align:center;font-weight:700;margin-bottom:40px;transition:opacity 0.3s ease;}
+.sidebar.closed h2{opacity:0;pointer-events:none;}
+.sidebar ul{list-style:none;}
+.sidebar ul li{margin:18px 0;}
+.sidebar ul li a{color:white;text-decoration:none;display:flex;align-items:center;gap:14px;padding:12px 15px;border-radius:12px;transition:0.3s;font-weight:500;background:transparent;}
+.sidebar ul li a:hover, .sidebar ul li a.active{background: rgba(255,255,255,0.25);box-shadow:0 0 12px rgba(255,255,255,0.3);transform: translateX(5px);}
+.sidebar ul li i{font-size:18px; transition:transform 0.3s;}
+.sidebar.closed ul li span{display:none;}
+.toggle-btn{position:absolute;right:-18px;top:20px;width:38px;height:38px;border-radius:50%; background:#fff;color:var(--purple-600);display:flex;align-items:center;justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,0.12);cursor:pointer;z-index:140;}
+
+.main{
+  margin-left:260px;
+  display:flex;
+  flex-direction:column;
+}
+.sidebar.closed + .main{margin-left:90px;}
+
+.topbar{background:var(--glass); display:flex;align-items:center;justify-content:space-between; padding:14px 22px;border-bottom:1px solid rgba(0,0,0,.04); position:sticky;top:0;z-index:80; backdrop-filter: blur(4px);}
+.topbar h1{color:var(--purple-700);}
+.controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.controls .search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#F6F0FF;
+  padding:8px 12px;
+  border-radius:5px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
+}
+.controls .search input{
+  border:0;
+  outline:none;
+  background:transparent;
+  width:180px;
+  font-size:14px;
+  color: var(--purple-700);
+}
+.controls select,
+.controls button.btn-small{
+  padding:6px 12px;
+  border-radius:5px;
+  border:1px solid rgba(99,39,145,0.1);
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+  background:white;
+}
+.controls select:hover,
+.controls button.btn-small:hover{
+  transform:scale(1.03);
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.content{padding:28px 30px;}
+h1{color:var(--purple-700);font-size:22px;margin-bottom:6px}
+.layout{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start;}
+.panel{background:var(--glass);border-radius:5px;padding:18px;box-shadow:var(--card-shadow);}
+.table{width:100%;border-collapse:collapse}
+.table thead th{font-size:13px;text-align:left;padding:10px 8px;color:#6b21a8;border-bottom:1px solid #8c00ff}
+.table tbody td{padding:12px 8px;border-bottom:1px dashed #8c00ff;vertical-align:middle;font-size:14px;color:#3f2a66}
+.empty{padding:28px;text-align:center;color:#6b21a8}
+.prof-card{background:#eadbff;border-radius:5px;box-shadow:0 6px 20px rgba(0,0,0,0.1);margin-bottom:14px;overflow:hidden}
+.prof-header{display:flex;justify-content:space-between;align-items:center;padding:12px;cursor:pointer;border-bottom:1px solid #eee}
+.prof-left{display:flex;align-items:center;gap:12px}
+.prof-left img{width:50px;height:50px;border-radius:50%;object-fit:cover}
+.prof-info h2{font-size:16px;color:#6b21a8;margin-bottom:2px}
+.services-container{display:none;flex-direction:column;padding:8px}
+.service-card{padding:10px;cursor:pointer;background:#f8f6ff;margin-bottom:6px;border-radius:5px;display:flex;justify-content:space-between;align-items:center}
+.service-details{display:none;flex-direction:column;margin-top:4px;font-size:13px;color:#5b2a82;padding-left:10px}
+.agendar-btn{padding:6px 10px;background:var(--purple-600);border:none;color:#fff;border-radius:5px;cursor:pointer;font-size:12px;margin-top:4px;align-self:flex-start}
+.status{font-weight:700;padding:6px 10px;border-radius:5px;display:inline-block}
+.status.agendado{background:rgba(255, 255, 0, 0.603);color:rgb(182, 182, 0)}
+.status.concluido{background:rgba(96, 112, 86, 0.08);color:var(--ok)}
+.status.cancelado{background:rgba(224,91,91,0.12);color:var(--danger)}
+.actions{display:flex;gap:8px;justify-content:center}
+.btn{padding:6px 10px;border-radius:5px;border:0;cursor:pointer;font-weight:600}
+.btn.edit{background:var(--purple-600);color:white}
+.btn.cancel{background:var(--danger);color:white}
+.btn.reagendar{background:var(--purple-700);color:white}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,6,23,0.5);display:none;align-items:center;justify-content:center;padding:24px;z-index:220}
+.modal{background:#fff;border-radius:5px;padding:18px;max-width:500px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,0.28)}
+.modal h3{color:var(--purple-700);margin-bottom:8px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+input, select{padding:8px 10px;border-radius:5px;border:1px solid rgba(99,39,145,0.06);outline:none;font-size:14px;background:#fff}
+.btn-small{padding:6px 10px;border-radius:5px;border:0;cursor:pointer;font-weight:600}
+footer{padding:26px;text-align:center;color:#6B21A8}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="toggle-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+  <h2>Beauty Hub</h2>
+  <ul>
+    <li><a href="admin_home.html"><i class="fa-solid fa-house"></i><span> Início</span></a></li>
+    <li><a href="agenda.html" class="active"><i class="fa-solid fa-clock"></i><span>Agendar Horario do Cliente</span></a></li>   
+    <li><a href="cliente.html"><i class="fa-solid fa-users"></i><span>Clientes</span></a></li>
+    <li><a href="pdv.html"><i class="fa-solid fa-cash-register"></i><span> PDV</span></a></li>
+    <li><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i><span> Sair</span></a></li>
+  </ul>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <h1>Beauty Hub</h1>
+    <div class="controls">
+      <div class="search">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--purple-700)"></i>
+        <input id="searchInput" placeholder="Pesquisar por cliente ou serviço..." />
+      </div>
+      <select id="filterStatus" title="Filtrar por status">
+        <option value="all">Todos</option>
+        <option value="Agendado">Agendado</option>
+        <option value="Concluído">Concluído</option>
+        <option value="Cancelado">Cancelado</option>
+      </select>
+      <button class="btn-small" id="clearFilters">Limpar</button>
+      <button class="btn-small" id="newBooking" style="background:var(--purple-600);color:white;">Novo Agendamento</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="layout">
+      <section class="panel">
+        <table class="table">
+          <h1>📅 Agenda:</h1>
+          <thead><tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Serviço</th><th>Status</th><th>Ações</th></tr></thead>
+          <tbody id="appointmentsBody"></tbody>
+        </table>
+        <div id="emptyMsg" class="empty" style="display:none">Nenhum agendamento</div>
+      </section>
+
+      <aside class="panel">
+        <h1>👥 Profissionais:</h1>
+        <div id="professionalsContainer"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>Agendar Atendimento</h3>
+    <div><label>Cliente</label><input id="modalClient" type="text"></div>
+    <div><label>Serviço</label><input id="modalService" type="text" disabled></div>
+    <div><label>Valor (R$)</label><input id="modalPrice" type="number" disabled></div>
+    <div><label>Data</label><input id="modalDate" type="date"></div>
+    <div><label>Hora</label><select id="modalTime"></select></div>
+    <div class="modal-actions">
+      <button class="btn-small" id="modalClose">Cancelar</button>
+      <button class="btn-small" id="modalConfirm" style="background:var(--purple-600);color:white">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Dados =====
+const LS_KEY='bh_agendamentos_v6';
+let appointments=JSON.parse(localStorage.getItem(LS_KEY)||'[]');
+const professionals=[
+  {id:'p1',name:'Ana Paula',img:'https://i.pravatar.cc/50?img=12',services:[{name:'Corte',price:60,time:'30min'},{name:'Escova',price:70,time:'40min'},{name:'Coloração',price:120,time:'90min'}]},
+  {id:'p2',name:'Marcos Lima',img:'https://i.pravatar.cc/50?img=14',services:[{name:'Barba',price:35,time:'20min'},{name:'Corte',price:55,time:'30min'}]}
+];
+
+// Marca automaticamente como concluído se a data/hora já passou
+const now = new Date();
+appointments.forEach(a=>{
+  const [year,month,day]=a.date.split('-').map(Number);
+  const [hour,minute]=a.time.split(':').map(Number);
+  const dateTime=new Date(year,month-1,day,hour,minute);
+  if(dateTime < now && a.status==='Agendado') a.status='Concluído';
+});
+
+if(appointments.length===0){
+  appointments.push({id:'a1',prof:'Ana Paula',client:'Cliente Exemplo',service:'Corte',date:'2025-11-05',time:'10:00',price:60,status:'Agendado'});
+}
+
+function uid(){ return 'a'+Math.random().toString(36).slice(2,9);}
+function formatDate(d){ return d.split('-').reverse().join('/');}
+function save(){ localStorage.setItem(LS_KEY,JSON.stringify(appointments)); renderAppointmentsFiltered();}
+
+// ===== Renderizar Agendamentos =====
+const body=document.getElementById('appointmentsBody');
+const emptyMsg=document.getElementById('emptyMsg');
+
+function renderAppointmentsFiltered(){
+  const query=(document.getElementById('searchInput').value||'').toLowerCase();
+  const statusF=document.getElementById('filterStatus').value;
+  const filtered=appointments.filter(a=>{
+    if(statusF!=='all' && a.status!==statusF) return false;
+    return (a.client+' '+a.service).toLowerCase().includes(query);
+  });
+  body.innerHTML='';
+  if(filtered.length===0){ emptyMsg.style.display='block'; return;}
+  emptyMsg.style.display='none';
+  filtered.sort((a,b)=> a.date===b.date? a.time.localeCompare(b.time): a.date.localeCompare(b.date));
+  filtered.forEach((b,i)=>{
+    const tr=document.createElement('tr');
+    const statusClass=b.status==='Agendado'?'agendado':(b.status==='Cancelado'?'cancelado':'concluido');
+    tr.innerHTML=`<td>${formatDate(b.date)}</td><td>${b.time}</td><td>${b.client}</td><td>${b.service}</td><td><span class="status ${statusClass}">${b.status}</span></td>
+      <td class="actions"><button class="btn edit">✏️</button><button class="btn cancel">❌</button><button class="btn reagendar">🔁</button></td>`;
+    body.appendChild(tr);
+
+    // Funções dos botões
+    tr.querySelector('.edit').onclick=()=>{
+      const appointment = appointments[i];
+      modalClient.value = appointment.client;
+      modalService.value = appointment.service;
+      modalPrice.value = appointment.price;
+      modalDate.value = appointment.date;
+      modalTime.innerHTML = `<option value="${appointment.time}">${appointment.time}</option>`;
+      selectedService = { prof: appointment.prof, name: appointment.service, price: appointment.price };
+      modalOverlay.style.display = 'flex';
+    };
+    tr.querySelector('.cancel').onclick=()=>{
+      if(confirm('Deseja realmente cancelar este agendamento?')){
+        appointments[i].status='Cancelado';
+        save();
+      }
+    };
+    tr.querySelector('.reagendar').onclick=()=>{
+      const appointment = appointments[i];
+      modalClient.value = appointment.client;
+      modalService.value = appointment.service;
+      modalPrice.value = appointment.price;
+      modalDate.value = '';
+      modalTime.innerHTML = '';
+      selectedService = { prof: appointment.prof, name: appointment.service, price: appointment.price };
+      modalOverlay.style.display = 'flex';
+    };
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input',renderAppointmentsFiltered);
+document.getElementById('filterStatus').addEventListener('change',renderAppointmentsFiltered);
+document.getElementById('clearFilters').addEventListener('click',()=>{
+  document.getElementById('searchInput').value='';
+  document.getElementById('filterStatus').value='all';
+  renderAppointmentsFiltered();
+});
+renderAppointmentsFiltered();
+
+// ===== Profissionais e Modal =====
+const profContainer=document.getElementById('professionalsContainer');
+let selectedService=null;
+const modalOverlay=document.getElementById('modalOverlay');
+const modalClient=document.getElementById('modalClient');
+const modalService=document.getElementById('modalService');
+const modalPrice=document.getElementById('modalPrice');
+const modalDate=document.getElementById('modalDate');
+const modalTime=document.getElementById('modalTime');
+
+professionals.forEach(p=>{
+  const div=document.createElement('div'); div.classList.add('prof-card');
+  div.innerHTML=`<div class="prof-header"><div class="prof-left"><img src="${p.img}"><div class="prof-info"><h2>${p.name}</h2></div></div><i class="fa-solid fa-chevron-down"></i></div>
+  <div class="services-container">${p.services.map(s=>`
+    <div class="service-card" data-prof="${p.id}" data-name="${s.name}" data-price="${s.price}">
+      ${s.name}
+      <div class="service-details">
+        <div>⏱️Tempo: ${s.time}</div>
+        <div>💰Valor: R$ ${s.price.toFixed(2)}</div>
+        <button class="agendar-btn">Agendar</button>
+      </div>
+    </div>`).join('')}</div>`;
+  profContainer.appendChild(div);
+  const header=div.querySelector('.prof-header');
+  const servicesDiv=div.querySelector('.services-container');
+  header.onclick=()=>servicesDiv.style.display=servicesDiv.style.display==='flex'?'none':'flex';
+});
+
+profContainer.addEventListener('click', e=>{
+  if(e.target.classList.contains('agendar-btn')){
+    const card=e.target.closest('.service-card');
+    selectedService={prof:card.dataset.prof,name:card.dataset.name,price:card.dataset.price};
+    modalService.value=selectedService.name;
+    modalPrice.value=selectedService.price;
+    modalClient.value=''; modalDate.value=''; modalTime.innerHTML='';
+    modalOverlay.style.display='flex';
+  } else {
+    const card=e.target.closest('.service-card');
+    if(card){
+      const details=card.querySelector('.service-details');
+      details.style.display=details.style.display==='flex'?'none':'flex';
+    }
+  }
+});
+
+modalDate.addEventListener('input',()=>{
+  const date=modalDate.value;
+  if(!date) return;
+  const profAppointments=appointments.filter(a=>a.prof===selectedService.prof&&a.date===date).map(a=>a.time);
+  const allTimes=['08:00','09:00','10:00','11:00','13:00','14:00','15:00','16:00','17:00'];
+  modalTime.innerHTML='';
+  allTimes.forEach(t=>{ if(!profAppointments.includes(t)){ const opt=document.createElement('option'); opt.value=t; opt.textContent=t; modalTime.appendChild(opt); }});
+});
+
+document.getElementById('modalConfirm').onclick=()=>{
+  if(!modalClient.value||!modalDate.value||!modalTime.value){ alert('Preencha todos os campos'); return;}
+  appointments.push({id:uid(),prof:selectedService.prof,client:modalClient.value,service:selectedService.name,date:modalDate.value,time:modalTime.value,price:Number(selectedService.price),status:'Agendado'});
+  save(); modalOverlay.style.display='none'; selectedService=null;
+};
+document.getElementById('modalClose').onclick=()=>{ modalOverlay.style.display='none'; selectedService=null; }
+
+function toggleMenu(){ document.querySelector('.sidebar').classList.toggle('closed'); }
+</script>
+
+  <footer>© 2025 Beauty Hub - Todos os direitos reservados.</footer>
+</body>
+</html>

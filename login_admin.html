@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login Admin | Beauty Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --purple-600:#8B5CF6;
+  --purple-700:#6B21A8;
+  --muted:#6b5671;
+}
+
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Inter',sans-serif; }
+
+body {
+  min-height:100vh;
+  background: linear-gradient(135deg,#f2e3ff,#f9f7fc);
+  display:flex;
+  flex-direction:column;
+}
+
+/* Topbar */
+.topbar {
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 20px;
+  border-bottom:1px solid rgba(0,0,0,.04);
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.brand{
+  font-weight:700;
+  color:var(--purple-700);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:20px;
+}
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.icon-btn{
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  font-size:18px;
+  color:var(--purple-700);
+}
+.user-avatar {
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:url('img/logo.jpg') center/cover;
+  border:2px solid #C4B5FD;
+}
+
+/* Container principal */
+main{
+  width:90%;
+  max-width:900px;
+  display:flex;
+  background:rgba(255,255,255,0.95);
+  border-radius:10px;
+  box-shadow:0 20px 40px rgba(80,30,120,0.25);
+  overflow:hidden;
+  margin:120px auto 40px; /* aumentei de 80px para 120px */
+  padding:0;
+  gap:0;
+  flex-direction:row;
+  position:relative;
+  z-index:2;
+}
+
+/* Frase motivacional */
+.side-text{
+  flex:1;
+  background:linear-gradient(135deg,rgb(169, 86, 247),#6B21A8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:50px 20px;
+  color:#fff;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  line-height:1.5;
+}
+.side-text p{
+  background:rgba(0,0,0,0.25);
+  padding:20px 25px;
+  border-radius:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Card de login */
+.form-container{
+  flex:1;
+  padding:50px 40px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+h1{
+  font-size:28px;
+  color:#6B21A8;
+  margin-bottom:10px;
+}
+.subtitle{
+  font-size:15px;
+  color:#6B21A8;
+  margin-bottom:28px;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+label{
+  text-align:left;
+  font-weight:600;
+  color:#6B21A8;
+}
+.input-group{
+  position:relative;
+}
+.input-group i{
+  position:absolute;
+  top:50%;
+  left:12px;
+  transform:translateY(-50%);
+  color:#6B21A8;
+}
+input{
+  width:100%;
+  padding:12px 14px 12px 38px;
+  border-radius:10px;
+  border:1px solid #C89BF5;
+  font-size:15px;
+  outline:none;
+  transition:0.3s;
+}
+input:focus{
+  border-color:#A15BD6;
+  box-shadow:0 0 8px rgba(161,91,214,0.4);
+}
+.btn{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  font-size:16px;
+  color:#fff;
+  background:linear-gradient(135deg,rgb(169, 86, 247),#6B21A8);
+  cursor:pointer;
+  transition:0.3s;
+}
+.btn:hover{
+  background:#8C44C7;
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(75,0,130,0.3);
+}
+#msgAdmin{
+  font-weight:600;
+  margin-top:10px;
+  min-height:20px;
+  text-align:center;
+  color:red;
+}
+
+/* Back button */
+.back-button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  background:var(--purple-700);
+  color:#fff;
+  border-radius:20%;
+  text-decoration:none;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  transition:0.2s;
+  margin-bottom:20px;
+  align-self:flex-start; /* alinha ao topo do form */
+}
+.back-button i { font-size:16px; }
+.back-button:hover { transform: translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,0.2); }
+
+/* Footer */
+footer{
+  padding:26px;
+  text-align:center;
+  color:var(--purple-700);
+}
+
+/* Responsivo */
+@media(max-width:750px){
+  main{flex-direction:column;}
+  .side-text{padding:30px; font-size:18px;}
+  .form-container{padding:40px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><i class="fa-solid fa-sparkles"></i> Beauty Hub</div>
+  <div class="topbar-right">
+    <div class="user-avatar"></div>
+  </div>
+</div>
+
+<main>
+  <div class="side-text">
+    <p>✨Admin Beauty Hub — gerencie o sistema com eficiência e estilo!</p>
+  </div>
+
+  <div class="form-container">
+    <a href="index.html" class="back-button">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+
+    <h1>Login do Admin</h1>
+    <form onsubmit="return loginAdmin(event)">
+      <div class="input-group">
+        <i class="fa-solid fa-envelope"></i>
+        <input id="adminUser" type="text" required placeholder="Digite o usuário">
+      </div>
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input id="adminSenha" type="password" required placeholder="Digite sua senha">
+      </div>
+      <button class="btn" type="submit">Entrar</button>
+      <p id="msgAdmin"></p>
+    </form>
+  </div>
+</main>
+
+  <footer>© 2025 Beauty Hub - Todos os direitos reservados.</footer>
+
+<script>
+function loginAdmin(event){
+  event.preventDefault();
+  const user=document.getElementById('adminUser').value.trim();
+  const senha=document.getElementById('adminSenha').value;
+
+  const admins = JSON.parse(localStorage.getItem('tb_admins') || '[]');
+  if(admins.length===0){
+    admins.push({user:'admin', senha:'1234'});
+    localStorage.setItem('tb_admins', JSON.stringify(admins));
+  }
+
+  const logged = admins.find(a => a.user === user && a.senha === senha);
+  const msg = document.getElementById('msgAdmin');
+
+  if(logged){
+    sessionStorage.setItem('tb_admin_logged', JSON.stringify(logged));
+    msg.style.color='green';
+    msg.textContent='Login realizado! Redirecionando...';
+    setTimeout(()=> window.location.href='admin_home.html',1000);
+  } else {
+    msg.style.color='red';
+    msg.textContent='Usuário ou senha incorretos 😕';
+  }
+}
+</script>
+
+</body>
+</html>
