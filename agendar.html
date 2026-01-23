@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title> Agende Seu Horarios | Beauty Hub</title>
+<title>Agende Seu Horarios | Beauty Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -78,16 +78,9 @@ h1 { font-size:28px;color:var(--purple-700); margin-bottom:10px; }
 
 /* Profissional */
 .prof-card {
-  flex: 1 1 90%; /* ocupa 90% da largura disponível */
-  max-width:800px; /* limite máximo */
-  background:var(--card-bg); 
-  border-radius:10px; 
-  padding:20px; 
-  box-shadow:var(--card-shadow);
-  cursor:pointer; 
-  transition:0.3s;
+  flex: 1 1 90%; max-width:800px; background:var(--card-bg); border-radius:10px; padding:20px; box-shadow:var(--card-shadow);
+  cursor:pointer; transition:0.3s;
 }
-
 .prof-header { display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .prof-left { display:flex; align-items:center; gap:15px; }
 .prof-header img { width:100px; height:100px; border-radius:10px; object-fit:cover; }
@@ -202,7 +195,11 @@ footer { padding:26px; text-align:center; color:#6B21A8; border-top:1px  rgba(0,
 function toggleMenu(){ document.querySelector('.sidebar').classList.toggle('closed'); }
 
 let agendamentos = [];
-const profissionais = [ { name:'Marília Andrade', desc:'Quem sou eu: <br> Esteticista, apaixonada por ajudar mulheres a se sentirem confiantes e radiantes em sua própria pele. Com anos de experiência na estética, tenho o prazer de oferecer uma variedade de tratamentos personalizados que vizam realçar sua beleza natural.Acredito que a estética val além da aparência física. Para mim, é uma combinação de cuidado holístico e bem estar emocional. Meu objetivo é proporcionar um ambiente acolhedor, onde você possa se sentir à vontade para compartilhar suas necessidades e metas.', img:'img/marilia.jpg', services:[ { type:'Corte', options:[ {name:'Simples',duration:'⏱️45 min',price:'💰R$80,00'}, {name:'Avançado',price:'💰R$120,00',duration:'⏱️70 min'} ] }, { type:'Manicure', options:[ {name:'Simples',duration:'⏱️30 min',price:'💰R$40,00',} ] }, { type:'Cílios', options:[ {name:'Clássico', duration:'⏱️90 min',price:'💰R$120,00'}, {name:'Volume Russo',price:'💰R$150,00',duration:'⏱️120 min'} ] } ] }, { name:'João Silva', desc:'Quem sou eu: <br> Especialista em barbearia e design de sobrancelhas, dedicado a realçar a autoestima e o estilo de cada cliente. Com anos de experiência no cuidado masculino e na arte do visagismo, ofereço atendimentos personalizados que unem técnica, precisão e atenção aos detalhes. Acredito que cuidar da aparência vai muito além do visual — é também uma forma de expressar personalidade e bem-estar. Meu compromisso é criar um ambiente acolhedor e moderno, onde você possa relaxar e sair se sentindo renovado, confiante e com o visual que mais valoriza você.', img:'img/foto.jpg', services:[ { type:'Barba', options:[ {name:'Simples',price:'💰R$40',duration:'⏱️20 min'} ] } ] } ];
+const profissionais = [
+  { name:'Marília Andrade', desc:'Quem sou eu: <br> Esteticista...', img:'img/marilia.jpg', services:[ { type:'Corte', options:[ {name:'Simples',duration:'⏱️45 min',price:'💰R$80,00'}, {name:'Avançado',price:'💰R$120,00',duration:'⏱️70 min'} ] }, { type:'Manicure', options:[ {name:'Simples',duration:'⏱️30 min',price:'💰R$40',} ] }, { type:'Cílios', options:[ {name:'Clássico', duration:'⏱️90 min',price:'💰R$120,00'}, {name:'Volume Russo',price:'💰R$150,00',duration:'⏱️120 min'} ] } ] },
+  { name:'João Silva', desc:'Quem sou eu: <br> Especialista...', img:'img/foto.jpg', services:[ { type:'Barba', options:[ {name:'Simples',price:'💰R$40',duration:'⏱️20 min'} ] } ] }
+];
+
 const container=document.getElementById('profissionaisContainer');
 profissionais.forEach((p,index)=>{
   const card=document.createElement('div'); card.className='prof-card';
@@ -326,10 +323,31 @@ function renderHorarios(){
   });
 }
 
+// CONFIRMAR AGENDAMENTO COM WHATSAPP
 function confirmarAgendamento(){
   if(selectedDate && selectedTime){
-    agendamentos.push({prof:selectedProf, service:selectedService, option:selectedOption, date:selectedDate, time:selectedTime});
-    alert('Agendamento confirmado!'); closeAgendarModal();
+    const agendamento = {
+      prof: selectedProf,
+      service: selectedService,
+      option: selectedOption,
+      date: selectedDate,
+      time: selectedTime
+    };
+    agendamentos.push(agendamento);
+
+    const profName = profissionais[selectedProf].name;
+    const mensagem = ` *Agendamento Confirmado* \n\n` +
+                     ` Profissional: ${profName}\n` +
+                     ` Serviço: ${selectedService}\n` +
+                     ` Opção: ${selectedOption}\n` +
+                     ` Data: ${selectedDate}\n` +
+                     ` Horário: ${selectedTime}`;
+
+    // 1️⃣ Enviar para a loja
+    window.open(`https://wa.me/5581999292333?text=${encodeURIComponent(mensagem)}`, '_blank');
+
+    alert('Agendamento confirmado e mensagem enviada via WhatsApp!');
+    closeAgendarModal();
   }
 }
 </script>
